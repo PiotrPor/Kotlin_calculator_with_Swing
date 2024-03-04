@@ -20,6 +20,7 @@ const val OdstPozKlaw: Int = 20 //odstep miedzy klawiszami w osi poziomej
 const val staly_pionowy_odstep = OdstGorKlaw+WysTekst+OdstKlawTekst
 
 class CalcWindow(window_title: String) : JFrame(), ActionListener {
+    // ZMIENNE
     var wyswietlacz : JTextArea
     var klawisze_dzialan : Array<JButton>
     var klawisze_cyfr : Array<JButton>
@@ -28,8 +29,15 @@ class CalcWindow(window_title: String) : JFrame(), ActionListener {
     var wybrana_operacja : TypDzialania
     var A : Double //liczba po prawej stronie operatora arytmetycznego
     var B : Double //liczba po lewej stronie operatora arytmetycznego
-    var C : Double //jakby wynik dzialania
+    //var C : Double //jakby wynik dzialania
+    //
+    var wpisano_pierwsza_cyfre : Boolean
+    var wpisano_kropke : Boolean
+    var wpisano_pierwsza_liczbe : Boolean
+    var wpisano_druga_liczbe : Boolean
+    var dzielenie_przez_0 : Boolean
 
+    // KONSTRUKTOR itd
     init {
         setTitle(window_title)
         defaultCloseOperation = EXIT_ON_CLOSE
@@ -108,9 +116,17 @@ class CalcWindow(window_title: String) : JFrame(), ActionListener {
         //
         A = 0.0
         B = 0.0
-        C = 0.0
+        //C = 0.0
+        dopisz_znak('0')
+        //
+        wpisano_pierwsza_cyfre = false
+        wpisano_kropke = false
+        wpisano_pierwsza_liczbe = false
+        wpisano_druga_liczbe = false
+        dzielenie_przez_0 = false
     }
 
+    // FUNKCJE
     fun dopisz_znak(znak: Char)
     {
         var napis: String = wyswietlacz.getText()
@@ -118,12 +134,17 @@ class CalcWindow(window_title: String) : JFrame(), ActionListener {
         wyswietlacz.text = napis
     }
 
+    fun napisz_komunikat(wpis : String)
+    {
+        wyswietlacz.text = wpis
+    }
+
     fun policz() : Double
     {
         var wynik: Double = 0.0
         if(B == 0.0 && wybrana_operacja == TypDzialania.Dzielenie)
         {
-            //ustaw bool
+            dzielenie_przez_0 = true
         }
         else
         {
@@ -135,7 +156,6 @@ class CalcWindow(window_title: String) : JFrame(), ActionListener {
         return wynik
     }
 
-    //
     //funkcja reaguje na zdarzenia
     override fun actionPerformed(wyd: ActionEvent)
     {
@@ -149,22 +169,48 @@ class CalcWindow(window_title: String) : JFrame(), ActionListener {
         }
         if(wyd.getSource() == klawisz_kropka)
         {
-            dopisz_znak('.')
-            //operacje na bool'ach
+            if(!wpisano_kropke)
+            {
+                dopisz_znak('.')
+                wpisano_kropke = true
+            }
         }
         if(klawisze_dzialan.contains(wyd.getSource()))
         {
+            //B = wyswietlacz.getText().toDouble()
             if(wyd.getSource() == klawisze_dzialan[0]) { wybrana_operacja = TypDzialania.Dodawanie }
             if(wyd.getSource() == klawisze_dzialan[1]) { wybrana_operacja = TypDzialania.Odejmowanie }
             if(wyd.getSource() == klawisze_dzialan[2]) { wybrana_operacja = TypDzialania.Mnozenie }
             if(wyd.getSource() == klawisze_dzialan[3]) { wybrana_operacja = TypDzialania.Dzielenie }
             //operacje na bool'ach
+            wpisano_kropke = false
+            if(wpisano_pierwsza_liczbe && !wpisano_druga_liczbe)
+            {
+                // ??
+                B = wyswietlacz.getText().toDouble()
+            }
+            if(!wpisano_pierwsza_liczbe)
+            {
+                A = wyswietlacz.getText().toDouble()
+                wpisano_pierwsza_liczbe = true
+            }
         }
         if(wyd.getSource() == klawisz_rowna_sie)
         {
             B = wyswietlacz.getText().toDouble()
-            var wynik : Double = policz()
-            //operacje na bool'ach
+            if(wybrana_operacja != TypDzialania.Nic)
+            {
+                val wynik : Double = policz()
+                if(dzielenie_przez_0)
+                {
+                    napisz_komunikat("dzielenie przez zero!")
+                }
+                else
+                {
+                    B = wynik
+                    wyswietlacz.text = wynik.toString()
+                }
+            }
         }
     }
 }
