@@ -3,23 +3,27 @@ package calculator
 import javax.swing.JFrame
 import javax.swing.JButton
 import javax.swing.JComponent //?
+import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
 
 //potrzebne stale
-val OdstGorKlaw: Int = 10 //odstep od gornej krawedzi okna
-val OdstLewKlaw: Int = 10 //odstep od lewej krawedzi okna
-val SzerTekst: Int = 250
-val WysTekst: Int = 40
-val OdstKlawTekst = 20 //odstep pionowo miedzy polem tekstowym a klawiszami
-val SzerKlaw: Int = 50 //szerokosc klawisza
-val WysKlaw: Int = 50 //wysokosc klawisza
-val OdstPionKlaw: Int = 20 //odstep miedzy klawiszami w osi pionowej
-val OdstPozKlaw: Int = 20 //odstep miedzy klawiszami w osi poziomej
+const val OdstGorKlaw: Int = 10 //odstep od gornej krawedzi okna
+const val OdstLewKlaw: Int = 10 //odstep od lewej krawedzi okna
+const val SzerTekst: Int = 250
+const val WysTekst: Int = 40
+const val OdstKlawTekst = 20 //odstep pionowo miedzy polem tekstowym a klawiszami
+const val SzerKlaw: Int = 50 //szerokosc klawisza
+const val WysKlaw: Int = 50 //wysokosc klawisza
+const val OdstPionKlaw: Int = 20 //odstep miedzy klawiszami w osi pionowej
+const val OdstPozKlaw: Int = 20 //odstep miedzy klawiszami w osi poziomej
+const val staly_pionowy_odstep = OdstGorKlaw+WysTekst+OdstKlawTekst
 
-class CalcWindow(window_title: String) : JFrame() {
+class CalcWindow(window_title: String) : JFrame(), ActionListener {
     var klawisze_dzialan : Array<JButton>
     var klawisze_cyfr : Array<JButton>
     var klawisz_kropka : JButton
     var klawisz_rowna_sie : JButton
+    var wybrana_operacja : TypDzialania
 
     init {
         setTitle(window_title)
@@ -27,6 +31,7 @@ class CalcWindow(window_title: String) : JFrame() {
         setSize(800, 700)
         setLayout(null)
         setLocationRelativeTo(null) //window appears in the middle of the screen
+        wybrana_operacja = TypDzialania.Nic
         //
         klawisze_dzialan = arrayOf(JButton("+"), JButton("-"),JButton("*"),JButton("/"))
         klawisze_cyfr = arrayOf(JButton("0"),
@@ -36,9 +41,6 @@ class CalcWindow(window_title: String) : JFrame() {
             )
         klawisz_kropka = JButton(".")
         klawisz_rowna_sie = JButton("=")
-        var a = 0
-        var b = 0
-        var staly_pionowy_odstep = OdstGorKlaw+WysTekst+OdstKlawTekst
         for(a in 0..2)
         {
             for(b in 0..2)
@@ -78,11 +80,41 @@ class CalcWindow(window_title: String) : JFrame() {
         add(klawisz_kropka)
         klawisz_rowna_sie.setBounds(
             OdstLewKlaw,
-            staly_pionowy_odstep+3*(WysKlaw+OdstPionKlaw),
+            staly_pionowy_odstep+0*(WysKlaw+OdstPionKlaw),
             SzerKlaw,
             WysKlaw
         )
         add(klawisz_rowna_sie)
         //
+        for(a in 0..9)
+        {
+            klawisze_cyfr[a].addActionListener(this)
+        }
+        for(a in 0..3)
+        {
+            klawisze_cyfr[a].addActionListener(this)
+        }
+        klawisz_kropka.addActionListener(this)
+        klawisz_rowna_sie.addActionListener(this)
+    }
+
+    //funkcja reaguje na zdarzenia
+    override fun actionPerformed(wyd: ActionEvent)
+    {
+        for(a in 0..9)
+        {
+            if(wyd.getSource() == klawisze_cyfr[a])
+            {
+                //dodaj cyfre
+            }
+        }
+        if(klawisze_dzialan.contains(wyd.getSource()))
+        {
+            if(wyd.getSource() == klawisze_dzialan[0])
+            {
+                wybrana_operacja = TypDzialania.Dodawanie
+            }
+            //..
+        }
     }
 }
