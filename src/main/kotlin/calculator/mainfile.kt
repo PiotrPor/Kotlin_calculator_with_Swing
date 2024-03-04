@@ -1,11 +1,11 @@
 package calculator
 
-import java.awt.EventQueue;
+import java.awt.EventQueue
 
 private fun stworzenieOknaKalkulatora()
 {
     var okno = CalcWindow("kalkulator w Kotlin")
-    okno.isVisible = true;
+    okno.isVisible = true
 }
 
 fun main()
