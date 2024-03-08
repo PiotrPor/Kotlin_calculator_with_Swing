@@ -10,11 +10,11 @@ import java.awt.event.ActionListener
 //potrzebne stale
 const val OdstGorKlaw: Int = 10 //odstep od gornej krawedzi okna
 const val OdstLewKlaw: Int = 10 //odstep od lewej krawedzi okna
-const val SzerTekst: Int = 250
+const val SzerTekst: Int = 360
 const val WysTekst: Int = 40
 const val OdstKlawTekst: Int = 20 //odstep pionowo miedzy polem tekstowym a klawiszami
-const val SzerKlaw: Int = 50 //szerokosc klawisza
-const val WysKlaw: Int = 50 //wysokosc klawisza
+const val SzerKlaw: Int = 75 //50 //szerokosc klawisza
+const val WysKlaw: Int = 75 //50 //wysokosc klawisza
 const val OdstPionKlaw: Int = 20 //odstep miedzy klawiszami w osi pionowej
 const val OdstPozKlaw: Int = 20 //odstep miedzy klawiszami w osi poziomej
 const val staly_pionowy_odstep = OdstGorKlaw+WysTekst+OdstKlawTekst
@@ -57,6 +57,7 @@ class CalcWindow(window_title: String) : JFrame(), ActionListener {
         wybrana_operacja = TypDzialania.Nic
         //
         wyswietlacz.setBounds(OdstLewKlaw,OdstGorKlaw,SzerTekst,WysTekst)
+        wyswietlacz.font = java.awt.Font.decode("Arial Black") //?
         add(wyswietlacz)
         for(a in 0..2)
         {
@@ -163,6 +164,7 @@ class CalcWindow(window_title: String) : JFrame(), ActionListener {
         {
             if(wyd.getSource() == klawisze_cyfr[a])
             {
+                if(dzielenie_przez_0) {dzielenie_przez_0 = false}
                 dopisz_znak(a.toChar())
                 break
             }
